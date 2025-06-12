@@ -7,7 +7,7 @@ app.secret_key = 'Bhanu12'
 
 # API Key Configuration
 
-api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyCa0Kk2SxpICxznwdtXSWD9KZtnUhzGvPw")
+api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyDjkPrKKwnUoqlr8mA3Jg1XLObWhtz0a8c")
 print("Using API Key:", api_key[:10], "...")
 genai.configure(api_key=api_key)
 
