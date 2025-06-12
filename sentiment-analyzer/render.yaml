@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: sentiment-analyzer
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python app.py"
+    envVars:
+      - key: GOOGLE_API_KEY
+        value: AIzaSyCa0Kk2SxpICxznwdtXSWD9KZtnUhzGvPw

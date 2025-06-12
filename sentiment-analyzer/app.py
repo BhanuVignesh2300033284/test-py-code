@@ -6,8 +6,9 @@ app = Flask(__name__)
 app.secret_key = 'Bhanu12'
 
 # API Key Configuration
-genai.configure(api_key="AIzaSyCa0Kk2SxpICxznwdtXSWD9KZtnUhzGvPw")
 
+api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyCa0Kk2SxpICxznwdtXSWD9KZtnUhzGvPw")
+genai.configure(api_key=api_key)
 # Initialize Gemini model
 model = None
 try:
