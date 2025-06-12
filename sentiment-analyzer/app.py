@@ -8,14 +8,25 @@ app.secret_key = 'Bhanu12'
 # API Key Configuration
 
 api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyCa0Kk2SxpICxznwdtXSWD9KZtnUhzGvPw")
+print("Using API Key:", api_key[:10], "...")
 genai.configure(api_key=api_key)
-# Initialize Gemini model
+
+# ✅ Test Gemini API Access Immediately
+try:
+    test_model = genai.GenerativeModel("gemini-pro")  # Use gemini-pro instead of flash
+    test_response = test_model.generate_content("Say Hello", request_options={"timeout": 30})
+    print("Gemini API Test Success ✅:", test_response.text)
+except Exception as e:
+    print("Gemini API Test Failed ❌:", e)
+
+# ✅ Initialize the actual model used by the app
 model = None
 try:
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-pro")  # Also use gemini-pro here
 except Exception as e:
     print(f"Error configuring Gemini API or initializing model: {e}")
     model = None
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
