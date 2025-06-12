@@ -1,0 +1,245 @@
+/* Background animated gradient */
+.background-accent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ff6a00, #ee0979);
+  background-size: 300% 300%;
+  animation: gradientBG 12s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientBG {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Center body content and set font */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #333;
+}
+
+/* Glassmorphism card style */
+.glass-card {
+  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 2rem;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+  transition: transform 0.3s ease;
+  max-width: 700px;
+  width: 100%;
+}
+.glass-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Gradient text heading */
+.accent-text {
+  background: linear-gradient(to right, #4f46e5, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Tagline under title */
+.tagline {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  margin-bottom: 2rem !important;
+}
+
+/* Neumorphic input box */
+.neumorphic-input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  border: none;
+  background: #e0e5ec;
+  box-shadow: inset 6px 6px 10px rgba(0,0,0,0.1), inset -6px -6px 10px rgba(255,255,255,0.7);
+  color: #333;
+  font-size: 1.1rem;
+  min-height: 120px;
+  resize: vertical;
+}
+.neumorphic-input:focus {
+  outline: none;
+  box-shadow: inset 4px 4px 6px rgba(0,0,0,0.15), inset -4px -4px 6px rgba(255,255,255,0.9), 0 0 0 3px rgba(79, 70, 229, 0.3);
+}
+.neumorphic-input::placeholder {
+  color: #888;
+}
+
+/* Neumorphic button */
+.neumorphic-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 1.5rem;
+  background: #e0e5ec;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  box-shadow: 6px 6px 10px rgba(0,0,0,0.1), -6px -6px 10px rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.neumorphic-btn:hover {
+  box-shadow: inset 4px 4px 6px rgba(0,0,0,0.15), inset -4px -4px 6px rgba(255,255,255,0.9);
+  transform: translateY(2px);
+  color: #4f46e5;
+}
+.neumorphic-btn:active {
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2), inset -2px -2px 4px rgba(255,255,255,0.9);
+  transform: translateY(1px);
+}
+
+/* Spinner inside button */
+.spinner-border {
+  margin-left: 0.75rem;
+  color: #4f46e5 !important;
+}
+
+/* Container for all result sections */
+.results-container {
+  margin-top: 2.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
+  animation: resultFade 0.6s ease both;
+}
+
+/* Sentiment result box */
+.sentiment-result-box {
+  padding: 2rem;
+  border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  animation: resultFade 0.6s ease both;
+  text-align: center;
+  color: #333;
+}
+.sentiment-result-box h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0;
+}
+.emoji {
+  font-size: 2rem;
+  margin-left: 0.5rem;
+  animation: emojiBounce 0.6s ease;
+}
+
+/* Animation for result fade */
+@keyframes resultFade {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Emoji bounce animation */
+@keyframes emojiBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Animated gradient border */
+.sentiment-result-box::before {
+  content: "";
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  background: linear-gradient(60deg, #34d399, #6366f1, #f87171, #fbbf24, #10b981);
+  background-size: 400% 400%;
+  z-index: -1;
+  border-radius: 1.5rem;
+  animation: borderGlow 8s ease infinite;
+}
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Sentiment color background */
+.sentiment-positive { background: rgba(52,211,153, 0.1); }
+.sentiment-negative { background: rgba(248,113,113, 0.1); }
+.sentiment-neutral { background: rgba(165,180,252, 0.1); }
+.sentiment-error { background: rgba(251,191,36, 0.1); }
+
+/* Info boxes for key phrases and summary */
+.info-box {
+  background: #e0e5ec;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: 6px 6px 10px rgba(0,0,0,0.07), -6px -6px 10px rgba(255,255,255,0.6);
+  margin-top: 1.5rem;
+  animation: resultFade 0.6s ease both;
+}
+.info-title {
+  background: linear-gradient(to right, #4f46e5, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+.info-content {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .glass-card {
+    padding: 1.5rem !important;
+    margin: 1rem;
+  }
+  .accent-text {
+    font-size: 1.8rem;
+  }
+  .tagline {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem !important;
+  }
+  .neumorphic-input {
+    min-height: 100px;
+    font-size: 1rem;
+  }
+  .neumorphic-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  .sentiment-result-box h2 {
+    font-size: 1.8rem;
+  }
+  .emoji {
+    font-size: 1.8rem;
+  }
+  .info-box {
+    padding: 1rem;
+  }
+  .info-title {
+    font-size: 1.1rem;
+  }
+  .info-content {
+    font-size: 0.85rem;
+  }
+  .results-container {
+    padding: 1rem;
+  }
+}
