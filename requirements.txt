@@ -1,4 +1,0 @@
-Flask
-google-generativeai
-Jinja2
-Werkzeug

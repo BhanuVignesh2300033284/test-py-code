@@ -1,32 +1,21 @@
 from flask import Flask, render_template, request, flash
 import google.generativeai as genai
+from dotenv import load_dotenv
 import os
+import json
+import re
+
+load_dotenv()  # Loads environment variables from the .env
+
+# Configure Gemini API
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Initialize model
+model = genai.GenerativeModel("gemini-1.5-flash")
+print("✅ Gemini model initialized!")
 
 app = Flask(__name__)
-app.secret_key = 'Bhanu12'
-
-# API Key Configuration
-
-api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyDjkPrKKwnUoqlr8mA3Jg1XLObWhtz0a8c")
-print("Using API Key:", api_key[:10], "...")
-genai.configure(api_key=api_key)
-
-# ✅ Test Gemini API Access Immediately
-try:
-    test_model = genai.GenerativeModel("gemini-pro")  # Use gemini-pro instead of flash
-    test_response = test_model.generate_content("Say Hello", request_options={"timeout": 30})
-    print("Gemini API Test Success ✅:", test_response.text)
-except Exception as e:
-    print("Gemini API Test Failed ❌:", e)
-
-# ✅ Initialize the actual model used by the app
-model = None
-try:
-    model = genai.GenerativeModel("gemini-pro")  # Also use gemini-pro here
-except Exception as e:
-    print(f"Error configuring Gemini API or initializing model: {e}")
-    model = None
-
+app.secret_key = "your_secret_key_here"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -36,45 +25,50 @@ def index():
     text_input = ""
 
     if request.method == "POST":
-        text_input = request.form["text"]
-
-        if not text_input.strip():
-            flash("Please enter some text to analyze.", "warning")
-            return render_template("index.html", sentiment=sentiment, key_phrases=key_phrases, summary=summary, text_input=text_input)
-
-        if not model:
-            flash("AI model is not configured. Please ensure your API key is valid.", "danger")
-            return render_template("index.html", sentiment=sentiment, key_phrases=key_phrases, summary=summary, text_input=text_input)
+        text_input = request.form.get("user_input", "")
 
         try:
-            # Sentiment Analysis
-            sentiment_prompt = f"Analyze the sentiment of this text, regardless of its language: '{text_input}'. Respond with one word only in English: Positive, Negative, or Neutral."
-            sentiment_response = model.generate_content(sentiment_prompt, request_options={"timeout": 30})
-            sentiment = sentiment_response.text.strip()
-            if sentiment.lower() not in ["positive", "negative", "neutral"]:
-                sentiment = "Neutral"
+            prompt = f"""Analyze the following text and return a JSON with sentiment, key_phrases, and summary:
 
-            # Key Phrase Extraction
-            keywords_prompt = f"Extract up to 5 key phrases from the following text, regardless of its language. The extracted key phrases MUST be in English: '{text_input}'. List them, separated by commas."
-            keywords_response = model.generate_content(keywords_prompt, request_options={"timeout": 30})
-            key_phrases = keywords_response.text.strip()
-            if key_phrases.lower() == "none" or not key_phrases:
-                key_phrases = "No specific key phrases identified."
+{text_input}
 
-            # Text Summarization
-            summary_prompt = f"Summarize the following text, regardless of its language, in 2-3 concise sentences: '{text_input}'"
-            summary_response = model.generate_content(summary_prompt, request_options={"timeout": 30})
-            summary = summary_response.text.strip()
+Respond in **strict JSON format only** like this:
+{{
+  "sentiment": "positive | negative | neutral",
+  "key_phrases": ["phrase1", "phrase2"],
+  "summary": "short summary"
+}}"""
+
+            response = model.generate_content(prompt)
+            output = response.text.strip()
+            print("[DEBUG] model output:", output)
+
+            # Extract JSON from model output
+            match = re.search(r"\{.*\}", output, re.DOTALL)
+            if match:
+                json_str = match.group(0)
+                data = json.loads(json_str)
+
+                sentiment = data.get("sentiment", "Error").capitalize()
+                key_phrases = ", ".join(data.get("key_phrases", []))
+                summary = data.get("summary", "Error")
+            else:
+                raise ValueError("Invalid JSON format returned by model.")
 
         except Exception as e:
+            print("❌ Processing error:", e, output)
             sentiment = "Error"
-            key_phrases = "Error during extraction."
-            summary = "Error during summarization."
-            print(f"Error during AI analysis: {e}")
-            flash("An error occurred during analysis.", "danger")
+            key_phrases = "Error"
+            summary = "Error"
+            flash("An error occurred. Check logs or API key.", "danger")
 
-    return render_template("index.html", sentiment=sentiment, key_phrases=key_phrases, summary=summary, text_input=text_input)
+    return render_template(
+        "index.html",
+        sentiment=sentiment,
+        key_phrases=key_phrases,
+        summary=summary,
+        text_input=text_input
+    )
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000, debug=True)
